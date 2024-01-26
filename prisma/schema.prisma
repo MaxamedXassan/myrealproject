@@ -10,13 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+model User {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String? @unique
+  hashedPassword  String
+  create    DateTime @default(now())
+
+  // customer  Customer[]
+}
+
 model Customer {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
+  // userId String  @db.ObjectId
   name   String
   number String  @unique
   create DateTime @default(now())
   
   loan Loan[]
+  // user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Loan {
@@ -28,25 +41,3 @@ model Loan {
   customer       Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
 }
-
-// model Customer {
-//   id           Int @id @default(autoincrement())
-//   // userId       Int
-//   name         String
-//   number       String
-//   created      DateTime @default(now())
-
-//   // user         User @relation(fields: [userId], references: [id])
-
-//   loan         Loan[]
-// }
-
-// model Loan {
-//   id            Int @id @default(autoincrement())
-//   customerId    Int
-//   title         String
-//   price         String
-//   created       DateTime @default(now())
-
-//   customer      Customer @relation(fields: [customerId], references: [id])
-// }

@@ -21,11 +21,12 @@ export const GET = async (req: Request, res: NextResponse) => {
   }
 };
 
+
 export const POST = async (req: Request, res: NextResponse) => {
   try {
     const { name, number, userId } = await req.json();
     await main();
-    const customer = await prisma.customer.create({ data: { name, number,  } });
+    const customer = await prisma.customer.create({ data: { name, number, userId } });
     return NextResponse.json({ message: "Success", customer }, { status: 201 });
   } catch (err) {
     return NextResponse.json({ message: "Error", err }, { status: 500 });
