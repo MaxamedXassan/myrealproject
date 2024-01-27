@@ -2,59 +2,74 @@
 import Link from "next/link"
 import {HiPencilAlt} from "react-icons/hi"
 import {HiOutlineTrash} from "react-icons/hi"
+// import prisma from "@/app/libs/prismabd"
+import prisma from "../../libs/prismabd"
+import moment from 'moment-timezone';
 
 
-const Single = () => {
 
-  const loans = [
-    {
-      id: 1,
-      title: "bariis baasto sonkor",
-      desc: "wuxuu qatay 2bariis 1baasto hafSonkor",
-      prace: "$12",
-      Date: "7-11-2023"
-    },
+async function getLoans() {
+  try {
+    const loans = await prisma.loan.findMany({});
+    return loans;
+  } catch (error) {
+    console.error('Error fetching customers:', error);
+    throw error; // Re-throwing the error to handle it where the function is called
+  }
+}
 
-    {
-      id: 2,
-      title: "bariis baasto bur",
-      desc: "wuxuu qatay 2bariis 1baasto 2bur",
-      prace: "$12",
-      Date: "7-11-2023"
-    },
+const Single = async () => {
+  const loans = await getLoans()
 
-    {
-      id: 3,
-      title: "caleen baasto sonkor",
-      desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
-      prace: "$12",
-      Date: "7-11-2023"
-    },
+  // const loans = [
+  //   {
+  //     id: 1,
+  //     title: "bariis baasto sonkor",
+  //     desc: "wuxuu qatay 2bariis 1baasto hafSonkor",
+  //     prace: "$12",
+  //     Date: "7-11-2023"
+  //   },
 
-    {
-        id: 3,
-        title: "caleen baasto sonkor",
-        desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
-        prace: "$12",
-        Date: "7-11-2023"
-      },
+  //   {
+  //     id: 2,
+  //     title: "bariis baasto bur",
+  //     desc: "wuxuu qatay 2bariis 1baasto 2bur",
+  //     prace: "$12",
+  //     Date: "7-11-2023"
+  //   },
 
-      {
-        id: 3,
-        title: "caleen baasto sonkor wuxuu ",
-        desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
-        prace: "$12",
-        Date: "7-11-2023"
-      },
+  //   {
+  //     id: 3,
+  //     title: "caleen baasto sonkor",
+  //     desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
+  //     prace: "$12",
+  //     Date: "7-11-2023"
+  //   },
 
-      {
-        id: 3,
-        title: "caleen baasto sonkor  ",
-        desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
-        prace: "$12",
-        Date: "7-11-2023"
-      },
-  ]
+  //   {
+  //       id: 3,
+  //       title: "caleen baasto sonkor",
+  //       desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
+  //       prace: "$12",
+  //       Date: "7-11-2023"
+  //     },
+
+  //     {
+  //       id: 3,
+  //       title: "caleen baasto sonkor wuxuu ",
+  //       desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
+  //       prace: "$12",
+  //       Date: "7-11-2023"
+  //     },
+
+  //     {
+  //       id: 3,
+  //       title: "caleen baasto sonkor  ",
+  //       desc: "wuxuu qatay 3caleen 1baasto hafSonkor",
+  //       prace: "$12",
+  //       Date: "7-11-2023"
+  //     },
+  // ]
 
 
   return (
@@ -95,11 +110,20 @@ const Single = () => {
               </td>
               <td
                 class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
-                {loan.prace}
+                {loan.price}
               </td>
               <td class="whitespace-nowrap px-6 py-4">
-                {loan.Date}
+              {moment(loan.Date).tz('Africa/Mogadishu').format('YYYY-MM-DD')}
                 </td>
+                {/* <td className="whitespace-nowrap px-6 py-4">
+  {new Date(loan.Date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'Africa/Mogadishu'
+  })}
+</td> */}
+
               <td
                 class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
                   <div className="flex gap-2">
@@ -119,49 +143,7 @@ const Single = () => {
   ))}
 </div>
 
-    
-// <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-// {loans.map((loan) => (
-//     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-//         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-//             <tr>
-//                 <th scope="col" class="px-6 py-3 w-2/6">
-//                     Title
-//                 </th>
-//                 <th scope="col" class="px-6 py-3">
-//                     Price
-//                 </th>
-//                 <th scope="col" class="px-6 py-3">
-//                     Date
-//                 </th>
-               
-//                 <th scope="col" class="px-6 py-3">
-//                     Action
-//                 </th>
-//             </tr>
-//         </thead>
-//         <tbody>
-//             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-//                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-//                    {loan.title}
-//                 </th>
-//                 <td class="px-6 py-4">
-//                    {loan.prace}
-//                 </td>
-//                 <td class="px-6 py-4">
-//                    {loan.Date}
-//                 </td>
-//                 <td class="px-6 py-4">
-                    
-//                     <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-//                 </td>
-               
-//             </tr>
-          
-//         </tbody>
-//     </table>
-//     ))}
-// </div>
+ 
 
 
   )
